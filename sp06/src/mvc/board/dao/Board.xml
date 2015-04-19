@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Board">
+
+    <typeAlias alias="board" type="mvc.board.vo.BoardBean"/>
+    
+    <!-- 게시판 저장 -->
+    <insert id="b_in" parameterClass="board">
+    <!-- parameterClass속성은 전달인자로 넘어오는 자료형 타입을
+    말함. -->
+     insert into board99 (board_no,board_name,board_title,
+     board_pwd,board_cont,board_ref,board_step,board_level,
+     board_date)
+     values(board99_no_seq.nextval,#board_name#,#board_title#,
+     #board_pwd#,#board_cont#,board99_no_seq.nextval,0,0,
+     sysdate)
+    </insert>
+    
+    <!-- 검색전후 레코드 개수 -->
+    <select id="b_count" resultClass="int"
+    parameterClass="board">
+      select count(board_no) from board99
+      <!-- 검색전,검색후 조건 -->
+      	<dynamic prepend="where">
+      	<!-- preprend속성은 where라는 sql 쿼리문 조건을
+      	넣을때 사용하는 속성이름 -->
+			<isEqual property="find_field" compareValue="">
+			<!-- 프로퍼티 속성값인 find_field는 BoardBean.java
+			에서 정의한 변수이름.find_field변수값이 빈공백과
+			같은 경우 실행. -->
+				<!-- 검색어를 입력하지 않았을때
+				 총레코드 개수 반환 -->
+			</isEqual>
+			<isEqual property="find_field" 
+			compareValue='board_title'>
+			<!-- find_field 피라미터 속성변수값이 board_title
+			값과 같을 경우 실행 -->
+				<!-- 검색 조건이 제목인 경우 -->
+				board_title like #find_name#
+			</isEqual>
+			<isEqual property="find_field" 
+			compareValue='board_cont'>
+				<!-- 검색 조건이 내용인 경우 -->
+				board_cont like #find_name#
+				<!-- like는 오라클 검색연산자 키워드로서 
+				~와 비슷 한 문자열을 찾아서 검색.like는 
+				%와 함께 사용됨. like도 
+					월말평가 예상 -->
+			</isEqual>
+		</dynamic>
+    </select>
+    
+    <!-- 검색전후 목록 -->
+    <select id="b_list" resultClass="board"
+    parameterClass="board">
+     select *
+		from
+		(select rowNum rNum, board_no, board_name,
+		 board_title, board_hit,board_ref, 
+		 board_step, board_level,board_date from
+		(select * from board99	
+		 <!-- 검색 전후 조건 -->
+		 <dynamic prepend="where">
+      	<!-- preprend속성은 where라는 sql 쿼리문 조건을
+      	넣을때 사용하는 속성이름 -->
+			<isEqual property="find_field" compareValue="">
+			<!-- 프로퍼티 속성값인 find_field는 BoardBean.java
+			에서 정의한 변수이름.find_field변수값이 빈공백과
+			같은 경우 실행. -->
+				<!-- 검색어를 입력하지 않았을때
+				 총레코드 개수 반환 -->
+			</isEqual>
+			<isEqual property="find_field" 
+			compareValue='board_title'>
+			<!-- find_field 피라미터 속성변수값이 board_title
+			값과 같을 경우 실행 -->
+				<!-- 검색 조건이 제목인 경우 -->
+				board_title like #find_name#
+			</isEqual>
+			<isEqual property="find_field" 
+			compareValue='board_cont'>
+				<!-- 검색 조건이 내용인 경우 -->
+				board_cont like #find_name#
+				<!-- like는 오라클 검색연산자 키워드로서 
+				~와 비슷 한 문자열을 찾아서 검색.like는 
+				%와 함께 사용됨. like도 
+					월말평가 예상 -->
+			</isEqual>
+		</dynamic>
+		order by board_ref desc,
+		 board_level asc))
+		where rNum&gt;=#startrow# and rNum&lt;=#endrow#
+		<!-- &gt; 은 ~보다 크다(>), &lt; 은 ~보다 작다(<) -->
+    </select>
+    
+    <!-- 조회수 증가 -->
+    <update id="b_hit" parameterClass="int">
+     update board99 set board_hit=board_hit+1
+     where board_no=#no#
+    </update>    
+    
+    <!-- 내용보기 -->
+    <select id="b_cont" parameterClass="int"
+    resultClass="board">
+     select * from board99 where board_no=#no#
+    </select>
+    
+    <!-- 답변 레벨 증가 -->
+    <update id="b_level" parameterClass="board">
+      update board99 set board_level=board_level+1
+      where board_ref=#board_ref# 
+      and board_level>#board_level#
+    </update>
+    
+    <!-- 답변 저장 -->
+    <insert id="b_reply" parameterClass="board">
+     insert into board99 (board_no,board_name,board_title,
+     board_pwd,board_cont,board_ref,board_step,board_level,
+     board_date)
+     values(board99_no_seq.nextval,#board_name#,#board_title#,
+     #board_pwd#,#board_cont#,#board_ref#,#board_step#+1,
+     #board_level#+1,sysdate)
+    </insert>
+    
+    <!-- 수정 -->
+    <update id="b_edit" parameterClass="board">
+     update board99
+     set board_name=#board_name#,board_title=#board_title#,
+     board_cont=#board_cont#
+     where board_no=#board_no#
+    </update>
+    
+    <!-- 삭제 -->
+    <delete id="b_del" parameterClass="int">
+      delete from board99 where board_no=#no# 
+    </delete>
+  </sqlMap>   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

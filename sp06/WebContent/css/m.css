@@ -1,0 +1,13 @@
+@CHARSET "UTF-8";
+
+/*m.css*/
+.input_s{
+	width:65px; height:50px;
+	border:1px solid blue;
+	border-radius:15px;
+	font-weight:bold;
+}
+.input_s:hover{
+	cursor:pointer;
+	cursor:hand;
+}

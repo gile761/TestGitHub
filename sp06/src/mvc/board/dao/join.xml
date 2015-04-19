@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Join">
+
+    <typeAlias alias="j" type="mvc.board.vo.JoinBean"/>
+    
+    <!-- 중복아이디 검색 -->
+    <select id="find_id" parameterClass="java.lang.String"
+    resultClass="j">
+     select * from join_member where join_id=#join_id# 
+    </select>
+
+    <!-- 회원저장 -->
+    <insert id="join_in" parameterClass="j">
+     insert into join_member
+     values(#join_id#,#join_pwd#,#join_name#,#phone01#,
+     #phone02#,#phone03#,#join_addr#,sysdate)
+    </insert>    
+    
+    <!-- 정보수정 -->
+    <update id="join_edit" parameterClass="j">
+     update join_member
+     set join_pwd=#join_pwd#,join_name=#join_name#,
+     phone01=#phone01#,phone02=#phone02#,phone03=#phone03#,
+     join_addr=#join_addr#
+     where join_id=#join_id#
+    </update>
+</sqlMap>    
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	
+	<!-- Controller 빈을 스프링에  자동 등록.
+	 스프링에서 핸들러 매핑을 하지 않아도 되는 부분이다.
+	 /board_list.do=boardAction
+	 빈아이디를 호출부분을 생략해도 된다.
+	 핸들러 매핑부분을 자동화 시키면 별도의 문서를 정리 해야 한다.
+	-->
+	<context:component-scan 
+	base-package="mvc.board.controller">
+	</context:component-scan> 
+	
+	<!-- JSP 기반의 웹어플리케이션 개발에 적합한 viewResolver 등록 -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+</beans>
